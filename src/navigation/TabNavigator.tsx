@@ -27,11 +27,11 @@ const TabNavigator = () => {
                     } else if (route.name === 'Capture') {
                         iconName = focused ? 'md-pencil' : 'md-pencil-outline';
                     }                
-                    return <Ionicons name={iconName} size={size} color={focused ? colors.primary : colors.grey2} />;
+                    return <Ionicons name={iconName} size={size} color={focused ? colors.primary : colors.grey} />;
                 },
 
                 tabBarActiveTintColor: colors.primary,
-                tabBarInactiveTintColor: colors.grey2,
+                tabBarInactiveTintColor: colors.grey,
             })}
         >
             <Tab.Screen name="Home" component={HomeScreen} />

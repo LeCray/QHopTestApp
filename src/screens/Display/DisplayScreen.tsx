@@ -1,67 +1,50 @@
-import { StyleSheet, View, Text, Pressable, FlatList } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-const DATA = [
-  {
-    id: 1,
-    name: 'Luke Skywalker',
-    birth_year: '19BBY',
-  },
-  {
-    id: 2,
-    name: 'C-3PO',
-    birth_year: '112BBY',
-  },
-  {
-    id: 3,
-    name: 'R2-D2',
-    birth_year: '33BBY',
-  },
-  {
-    id: 4,
-    name: 'Darth Vader',
-    birth_year: '41.9BBY',
-  },
-  {
-    id: 5,
-    name: 'Leia Organa',
-    birth_year: '19BBY',
-  },
-];
+import React, { useEffect, useState } from 'react';
+import { Text, View } from 'react-native';
+import { createDataService } from '../../api/DataService';
+
+const dataService = createDataService();
+
 const DisplayScreen = () => {
+  const [personData, setPersonData] = useState<PersonData>();
+  const [contactData, setContactData] = useState<ContactData>();
 
-  const navigation = useNavigation();
+  useEffect(() => {
+    const fetchPersonData = async () => {
+      const data = await dataService.getPersonData();
+      setPersonData(data);
+    };
 
-  const renderListItems = ({ item }) => {      
-    return (
-        <Pressable
-            onPress={() =>
-            navigation.navigate('Details', {
-                name: item.name,
-                birthYear: item.birth_year,
-            })
-            }
-        >
-        <Text
-          style={{ fontSize: 18, paddingHorizontal: 12, paddingVertical: 12 }}
-        >
-          {item.name}
-        </Text>
-        <View
-          style={{
-            borderWidth: StyleSheet.hairlineWidth,
-            borderColor: '#ccc',
-          }}
-        />
-        </Pressable>
-    );
-  };
+    const fetchContactData = async () => {
+      const data = await dataService.getContactData();
+      setContactData(data);
+    };
+
+    fetchPersonData();
+    fetchContactData();
+  }, []);
 
   return (
-    <View style={{ flex: 1, paddingTop: 10 }}>
-        <Text>DISPLAY SCREEN</Text>
+    <View>
+      <Text>Person Data:</Text>
+      {personData ? (
+        <>
+          <Text>Name: {personData.name}</Text>
+          <Text>Surname: {personData.surname}</Text>
+        </>
+      ) : (
+        <Text>Loading person data...</Text>
+      )}
+      <Text>Contact Data:</Text>
+      {contactData ? (
+        <>
+          <Text>Email: {contactData.email}</Text>
+          <Text>Cell No: {contactData.cell_no}</Text>
+        </>
+      ) : (
+        <Text>Loading contact data...</Text>
+      )}
     </View>
   );
-
 };
 
 export default DisplayScreen;
