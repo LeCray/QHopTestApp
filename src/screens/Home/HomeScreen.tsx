@@ -1,46 +1,51 @@
 import { StyleSheet, View, Text, Pressable, FlatList } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-
 import Ionicons from 'react-native-vector-icons/Ionicons';
-//import { useTheme } from 'react-native-elements';
+import dynamicStyles from './styles'
 
-
-const DATA = [
-  {
-    id: 1,
-    name: 'Luke Skywalker',
-    birth_year: '19BBY',
-  },
-  {
-    id: 2,
-    name: 'C-3PO',
-    birth_year: '112BBY',
-  },
-  {
-    id: 3,
-    name: 'R2-D2',
-    birth_year: '33BBY',
-  },
-  {
-    id: 4,
-    name: 'Darth Vader',
-    birth_year: '41.9BBY',
-  },
-  {
-    id: 5,
-    name: 'Leia Organa',
-    birth_year: '19BBY',
-  },
-];
 const HomeScreen = () => {
   
     const { colors } = useTheme();
+    const styles = dynamicStyles(colors)
+
+    interface ListItem {
+        id: number;
+        label: string;
+      }
+
+    const generateListItems = (): ListItem[] => {
+        const items: ListItem[] = [];
+      
+        for (let i = 1; i <= 1000; i++) {
+          if (i % 100 === 0) {
+            items.push({ id: i, label: 'beep boop' });
+          } else if (i % 20 === 0) {
+            items.push({ id: i, label: 'boop' });
+          } else if (i % 5 === 0) {
+            items.push({ id: i, label: 'beep' });
+          } else {
+            items.push({ id: i, label: i.toString() });
+          }
+        }
+      
+        return items;
+      };
+      
+      const ListItemView = ({ label }: { label: string }) => (
+        <View style={{ padding: 10 }}>
+          <Text>{label}</Text>
+        </View>
+      );
+
+    const items = generateListItems();
 
     return (
         <View style={{ flex: 1, paddingTop: 10}}>
-            <Text>HOME SCREEN</Text>
-            <Ionicons name='home' size={50} color={colors.primary} />
-            <Ionicons name="rocket" size={30} color="#900" />
+            <FlatList
+                data={items}
+                renderItem={({ item }) => <ListItemView label={item.label} />}
+                keyExtractor={(item) => item.id.toString()}
+            />
         </View>
     );
 
