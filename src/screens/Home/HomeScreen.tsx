@@ -1,5 +1,10 @@
 import { StyleSheet, View, Text, Pressable, FlatList } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
+
+import Ionicons from 'react-native-vector-icons/Ionicons';
+//import { useTheme } from 'react-native-elements';
+
+
 const DATA = [
   {
     id: 1,
@@ -28,39 +33,16 @@ const DATA = [
   },
 ];
 const HomeScreen = () => {
+  
+    const { colors } = useTheme();
 
-  const navigation = useNavigation();
-
-  const renderListItems = ({ item }) => {      
     return (
-        <Pressable
-            onPress={() =>
-            navigation.navigate('Details', {
-                name: item.name,
-                birthYear: item.birth_year,
-            })
-            }
-        >
-        <Text
-          style={{ fontSize: 18, paddingHorizontal: 12, paddingVertical: 12 }}
-        >
-          {item.name}
-        </Text>
-        <View
-          style={{
-            borderWidth: StyleSheet.hairlineWidth,
-            borderColor: '#ccc',
-          }}
-        />
-        </Pressable>
+        <View style={{ flex: 1, paddingTop: 10}}>
+            <Text>HOME SCREEN</Text>
+            <Ionicons name='home' size={50} color={colors.primary} />
+            <Ionicons name="rocket" size={30} color="#900" />
+        </View>
     );
-  };
-
-  return (
-    <View style={{ flex: 1, paddingTop: 10 }}>
-        <Text>HOME SCREEN</Text>
-    </View>
-  );
 
 };
 
