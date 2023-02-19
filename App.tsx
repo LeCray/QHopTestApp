@@ -13,9 +13,7 @@ import RootNavigator from './src/navigation';
 import { ThemeProvider } from 'react-native-elements';
 
 
-function App(): JSX.Element {
-    const isDarkMode = useColorScheme() === 'dark';
-    console.log("Darkk: ", isDarkMode)
+function App(): JSX.Element {        
 
   return (      
         // <ThemeProvider useDark={isDarkMode}>
