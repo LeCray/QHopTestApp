@@ -16,8 +16,7 @@ const TabNavigator = () => {
 
     return (
         <Tab.Navigator
-            screenOptions={({ route }) => ({
-
+            screenOptions={({ route }) => ({                
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName;
                     if (route.name === 'Home') {
@@ -32,6 +31,7 @@ const TabNavigator = () => {
 
                 tabBarActiveTintColor: colors.primary,
                 tabBarInactiveTintColor: colors.grey,
+                tabBarHideOnKeyboard: true
             })}
         >
             <Tab.Screen name="Home" component={HomeScreen} />
