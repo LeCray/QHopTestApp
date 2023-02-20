@@ -4,8 +4,11 @@ import { createDataService } from '../../api/DataService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input, Text } from 'react-native-elements';
 import dynamicStyles from './styles'
-import { useTheme } from '@react-navigation/native';
+import { useTheme, useScrollToTop } from '@react-navigation/native';
 import Button from 'react-native-button'
+import { RefreshControlBase } from 'react-native';
+import validator from 'validator'
+import { isValidPhoneNumber } from 'react-phone-number-input'
 
 
 
@@ -25,7 +28,7 @@ const CaptureScreen = () => {
     const [cell_no, setCellno] = useState("")
 
     const { colors } = useTheme();
-    const styles = dynamicStyles(colors)
+    const styles = dynamicStyles(colors)    
 
     useEffect(() => {
         const fetchPersonData = async () => {
@@ -49,8 +52,6 @@ const CaptureScreen = () => {
             
     }, []);
 
-
-
     const handleSubmit = async () => {        
 
         if (!name) { setName("Michael")}
@@ -58,24 +59,36 @@ const CaptureScreen = () => {
         if (!email) {setEmail("michael@test.com")}
         if (!cell_no) {setCellno("0825558364")}
 
-        setUpdatedPersonData({name: name, surname: surname})
-        setUpdatedContactData(() => ({email: email, cell_no: cell_no}))
+        if (!validator.isEmail(email)) {
+            Alert.alert(
+                'Invalid email', 
+                'Please make sure the email is correct', 
+                [{text: 'OK'}]
+            );             
+        } else if (!isValidPhoneNumber(cell_no)) {
+            Alert.alert(
+                'Invalid cell number', 
+                'Check the length, and include the country code (e.g. +27)', 
+                [{text: 'OK'}]
+            );             
+        }  else {
+            setUpdatedPersonData({name: name, surname: surname})
+            setUpdatedContactData(() => ({email: email, cell_no: cell_no}))
 
-        setLoading(true)
+            setLoading(true)
 
-        await dataService.updatePersonData({name: name, surname: surname});    
-        await dataService.updateContactData({email: email, cell_no: cell_no});
-    
-        //refresh()
-        setShowButtons(false)
-        setLoading(false)
-
-        Alert.alert(
-            '', 
-            'Details updated successfully', 
-            [{text: 'Done'}]
-        ); 
-                    
+            await dataService.updatePersonData({name: name, surname: surname});    
+            await dataService.updateContactData({email: email, cell_no: cell_no});
+        
+            //refresh()
+            setShowButtons(false)
+            setLoading(false)        
+            Alert.alert(
+                '', 
+                'Details updated successfully', 
+                [{text: 'Done'}]
+            );                               
+        }                   
     };
 
     const handleCancel = async () => {
@@ -97,7 +110,7 @@ const CaptureScreen = () => {
 
         fetchPersonData();
         fetchContactData();
-        setShowButtons(false)
+        setShowButtons(false)        
     }
 
     const lastNameRef = useRef();
@@ -142,7 +155,7 @@ const CaptureScreen = () => {
                     />
                 </>
             ) : (
-                <Text style={styles.titles}>Loading person data...</Text>
+                <Text style={styles.titleLoading}>Loading person data...</Text>
             )}
             <Text style={styles.titles}>Update Contact Data</Text>
             {contactData ? (
@@ -179,7 +192,7 @@ const CaptureScreen = () => {
 
                 </>
             ) : (
-                <Text style={styles.titles}>Loading contact data...</Text>
+                <Text style={styles.titleLoading}>Loading contact data...</Text>
             )}
             
             {loading? 
