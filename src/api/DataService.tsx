@@ -30,7 +30,7 @@ const sampleContactData = (): ContactData => ({
     cell_no: '0825558364',
 });
 
-const storeData = async (key: string, data: any) => {
+const storeData = async (key: string, data: any) => {    
     await AsyncStorage.setItem(key, JSON.stringify(data));
 };
 
@@ -58,11 +58,13 @@ export const createDataService = (): DataService => {
         return data;
     };
 
-    const updatePersonData = async (data: PersonData) => {
+    const updatePersonData = async (data: PersonData) => {     
+        console.log("Person update: ", data)   
         await storeData(PERSON_DATA_KEY, data);
     };
 
     const updateContactData = async (data: ContactData) => {
+        console.log("Contact update: ", data)
         await storeData(CONTACT_DATA_KEY, data);
     };
 

@@ -33,7 +33,7 @@ const HomeScreen = () => {
       
       const ListItemView = ({ label }: { label: string }) => (
         <View style={{ padding: 10 }}>
-          <Text>{label}</Text>
+          <Text style={{color: colors.text}}>{label}</Text>
         </View>
       );
 

@@ -19,86 +19,84 @@ const CaptureScreen = () => {
     const [loading, setLoading] = useState(false)
     const [showButtons, setShowButtons] = useState(false)
 
+    const [name, setName] = useState("")
+    const [surname, setSurname] = useState("")
+    const [email, setEmail] = useState("")
+    const [cell_no, setCellno] = useState("")
+
     const { colors } = useTheme();
     const styles = dynamicStyles(colors)
 
     useEffect(() => {
         const fetchPersonData = async () => {
-        const data = await dataService.getPersonData();
-        setPersonData(data);
-        };
-
-        const fetchContactData = async () => {
-        const data = await dataService.getContactData();
-        setContactData(data);
-        };
-
-        fetchPersonData();
-        fetchContactData();
-    }, []);
-
-    const refresh = () => {
-        const fetchPersonData = async () => {
             const data = await dataService.getPersonData();
             setPersonData(data);
+            setName(data.name)            
+            setSurname(data.surname)            
+            console.log("PersonData: ", data)
         };
 
         const fetchContactData = async () => {
             const data = await dataService.getContactData();
             setContactData(data);
+            setEmail(data.email)
+            setCellno(data.cell_no)
+            //console.log("ContactData: ", contactData.email)
         };
 
         fetchPersonData();
         fetchContactData();
+            
+    }, []);
+
+
+
+    const handleSubmit = async () => {        
+
+        if (!name) { setName("Michael")}
+        if (!surname) {setSurname("Baker")}
+        if (!email) {setEmail("michael@test.com")}
+        if (!cell_no) {setCellno("0825558364")}
+
+        setUpdatedPersonData({name: name, surname: surname})
+        setUpdatedContactData(() => ({email: email, cell_no: cell_no}))
+
+        setLoading(true)
+
+        await dataService.updatePersonData({name: name, surname: surname});    
+        await dataService.updateContactData({email: email, cell_no: cell_no});
+    
+        //refresh()
+        setShowButtons(false)
+        setLoading(false)
+
         Alert.alert(
             '', 
             'Details updated successfully', 
             [{text: 'Done'}]
         ); 
-        setLoading(false)
-    }
-
-    const handlePersonDataChange = (field, value) => {
-        setShowButtons(true)
-        setUpdatedPersonData((prevState) => ({ ...prevState, [field]: value }));
-    };
-
-    const handleContactDataChange = (field, value) => {
-        setShowButtons(true)
-        setUpdatedContactData((prevState) => ({ ...prevState, [field]: value }));
-    };
-
-    const handleSubmit = async () => {
-        //console.log("Person Data: ", updatedPersonData.name)
-
-        if (
-            updatedPersonData.name === "" || updatedPersonData.surname === "" ||
-            updatedPersonData.email === "" || updatedPersonData.cell_no === ""
-        ) {
-            Alert.alert(
-                '', 
-                'All fields are necessary', 
-                [{text: 'OK'}]
-            );                        
-            return
-        } else {
-
-            setLoading(true)
-
-            if (Object.keys(updatedPersonData).length > 0) {
-                await dataService.updatePersonData(updatedPersonData);
-            }
-            if (Object.keys(updatedContactData).length > 0) {
-                await dataService.updateContactData(updatedContactData);
-            }
-
-            refresh()
-        }                
+                    
     };
 
     const handleCancel = async () => {
-        setUpdatedPersonData({})
-        setUpdatedContactData({})
+        const fetchPersonData = async () => {
+            const data = await dataService.getPersonData();
+            setPersonData(data);
+            setName(data.name)            
+            setSurname(data.surname)            
+            console.log("PersonData: ", data)
+        };
+
+        const fetchContactData = async () => {
+            const data = await dataService.getContactData();
+            setContactData(data);
+            setEmail(data.email)
+            setCellno(data.cell_no)
+            //console.log("ContactData: ", contactData.email)
+        };
+
+        fetchPersonData();
+        fetchContactData();
         setShowButtons(false)
     }
 
@@ -113,8 +111,12 @@ const CaptureScreen = () => {
             {personData ? (
                 <>
                 <Input                
-                    value={updatedPersonData.name ?? personData.name}                                  
-                    onChangeText={(value) => handlePersonDataChange('name', value)}
+                    value={name}                                  
+                    onChangeText={(value) => {
+                        setName(value)
+                        setShowButtons(true)
+                    }}
+                    
                     style={styles.input}
                     inputContainerStyle={{width: '90%', marginLeft: 10}}
                     placeholder='First name'
@@ -124,8 +126,11 @@ const CaptureScreen = () => {
                         blurOnSubmit={false}
                     />
                 <Input                
-                    value={updatedPersonData.surname ?? personData.surname}                                
-                    onChangeText={(value) => handlePersonDataChange('surname', value)}
+                    value={surname}                                
+                    onChangeText={(value) => {
+                        setSurname(value)
+                        setShowButtons(true)
+                    }}
                     style={styles.input}
                     inputContainerStyle={{width: '90%', marginLeft: 10}}
                     placeholder='Last name'
@@ -137,14 +142,17 @@ const CaptureScreen = () => {
                     />
                 </>
             ) : (
-                <Text>Loading person data...</Text>
+                <Text style={styles.titles}>Loading person data...</Text>
             )}
             <Text style={styles.titles}>Update Contact Data</Text>
             {contactData ? (
                 <>
                     <Input                
-                        value={updatedContactData.email ?? contactData.email}
-                        onChangeText={(value) => handleContactDataChange('email', value)}
+                        value={email}
+                        onChangeText={(value) => {
+                            setEmail(value)
+                            setShowButtons(true)
+                        }}
                         leftIcon={{ type: 'fontisto', name: 'email', color: colors.text, size: 20}}    
                         style={styles.input} 
                         inputContainerStyle={{width: '90%', marginLeft: 10}}    
@@ -156,8 +164,11 @@ const CaptureScreen = () => {
                             blurOnSubmit={false}
                         />
                     <Input                
-                        value={updatedContactData.cell_no ?? contactData.cell_no}
-                        onChangeText={(value) => handleContactDataChange('cell_no', value)}
+                        value={cell_no}
+                        onChangeText={(value) => {
+                            setCellno(value)
+                            setShowButtons(true)
+                        }}
                         leftIcon={{ type: 'font-awesome', name: 'phone', color: colors.text  }}   
                         style={styles.input}     
                         inputContainerStyle={{width: '90%', marginLeft: 10}}                        
