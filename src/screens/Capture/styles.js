@@ -18,11 +18,14 @@ const dynamicStyles = (colors) => {
             fontSize: 20,
             fontWeight: 'bold'
         },
-        titleLoading: {
-            color: colors.text,
-            padding: 20,
-            fontSize: 15,            
-        },
+        // button: {
+        //     width: '80%',            
+        //     alignSelf: 'center',
+        //     marginTop: 30,            
+        //     borderColor: colors.text,
+        //     borderWidth: 1,
+        //     height: 50
+        // },
         button: {
             color: colors.text,
             fontSize: 15,
