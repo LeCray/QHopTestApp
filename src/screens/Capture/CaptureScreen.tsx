@@ -53,7 +53,7 @@ const CaptureScreen = () => {
         if (!name) { setName("Michael")}
         if (!surname) {setSurname("Baker")}
         if (!email) {setEmail("michael@test.com")}
-        if (!cell_no) {setCellno("0825558364")}
+        if (!cell_no) {setCellno("+27825558364")}
 
         if (!validator.isEmail(email)) {
             Alert.alert(
@@ -81,7 +81,7 @@ const CaptureScreen = () => {
             setLoading(false)        
             Alert.alert(
                 '', 
-                'Details updated successfully', 
+                'Details updated successfully.', 
                 [{text: 'Done'}]
             );                               
         }          

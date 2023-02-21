@@ -27,7 +27,7 @@ const samplePersonData = (): PersonData => ({
 
 const sampleContactData = (): ContactData => ({
     email: 'michael@test.com',
-    cell_no: '0825558364',
+    cell_no: '+27825558364',
 });
 
 const storeData = async (key: string, data: any) => {    
